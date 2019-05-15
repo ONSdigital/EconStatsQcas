@@ -5,13 +5,17 @@ import math
 #myData = pd.read_csv("C:\\Users\\Off.Network.User4\\Desktop\data\\testData.csv")
 #myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_bi_bi_r.json""")
 #myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_bi_bi_r_fi_fi_r.json""")
-myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_fi_fi_Quarterly.json""")
-myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_fi_fi_Annually.json""")
-myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_bi_r_fi_r_fi.json""")
-myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_c_fi.json""")
-myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_c_fi_fi.json""")
-myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_c_fi_NotSelected_r.json""")
+#myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_fi_fi_Quarterly.json""")
+#myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_fi_fi_Annually.json""")
+#myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_bi_r_fi_r_fi.json""")
+#myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_c_fi.json""")
+#myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_c_fi_fi.json""")
+#myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_c_fi_NotSelected_r.json""")
 #myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_NotSelected_c.json""")
+#myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_construct.json""")
+#myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_e.json""")
+#myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_fi.json""")
+myData = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_r_r.json""")
 class Imputation(baseMethod):
     """
     Description: Imputation Class controls the imputation of data.
@@ -149,15 +153,16 @@ class Imputation(baseMethod):
                 #                             self.markerForwardImp, self.markerBackwardImp, self.timeDiffLag,
                   #                           self.timeDiffLead, self.markerColumn,workingDataFrame,self.uniqueIdentifier), axis=1)
         outputDataFrame = workingDataFrame[workingDataFrame[self.targetColumn].isnull()]
-        outputDataFrame[[self.outputColumn,self.markerColumn]] = outputDataFrame.apply(
-            lambda x: self.rollingImputation(self.periodColumnVal, x, self.periodColumn, self.outputColumn,
-                                             self.forwardImpLink, self.backwardImpLink, self.lagTarget, self.leadTarget,
-                                             self.markerForwardImp, self.markerBackwardImp, self.timeDiffLag,
-                                             self.timeDiffLead, self.markerColumn,workingDataFrame,self.uniqueIdentifier), axis=1)
+        if outputDataFrame.size >0:
+            outputDataFrame[[self.outputColumn,self.markerColumn]] = outputDataFrame.apply(
+                lambda x: self.rollingImputation(self.periodColumnVal, x, self.normalisedPeriod, self.outputColumn,
+                                                 self.forwardImpLink, self.backwardImpLink, self.lagTarget, self.leadTarget,
+                                                 self.markerForwardImp, self.markerBackwardImp, self.timeDiffLag,
+                                                 self.timeDiffLead, self.markerColumn,workingDataFrame,self.uniqueIdentifier), axis=1)
 
-        workingDataFrame= workingDataFrame.dropna(subset = [self.targetColumn])
+            workingDataFrame= workingDataFrame.dropna(subset = [self.targetColumn])
 
-        workingDataFrame=workingDataFrame.append(outputDataFrame)
+            workingDataFrame=workingDataFrame.append(outputDataFrame)
 
 
         # Some data is coming through with no imp link because it doesn't hit any conditions aka bad data we think.
@@ -202,41 +207,103 @@ class Imputation(baseMethod):
         tmpLag = 0
         tmpLead = 0
         tmpConstruct = 0
+
+
+
+
+
         #This slice needs to include groupby columns
         slicedDF = workingDataFrame[workingDataFrame[uniqueIdentifier]==dfrow[uniqueIdentifier]]
+        refPeriods = slicedDF[periodColumn].drop_duplicates().tolist()
+        Periods = workingDataFrame[periodColumn].drop_duplicates()
+
+
+        i=0
+        blank=False
+        outlist=[]
+        print(Periods)
+        print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
+        print(refPeriods)
+        print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
+        #if i > len(refPeriod)
+        for x in Periods:
+            if i == len(refPeriods):break
+            if dfrow[periodColumn] == x:
+                blank = True
+            if x == refPeriods[i]:
+                outlist.append(x)
+                i += 1
+
+            else:
+                if not blank:
+                    outlist = []
+                    print("no")
+                else:
+                    break
+        print(outlist)
+        slicedDF.to_csv(str(dfrow[uniqueIdentifier])+"GYARGHG.csv")
+        slicedDF = slicedDF[(slicedDF[periodColumn].isin(outlist))]
+        slicedDF.to_csv(str(dfrow[uniqueIdentifier])+"GYARGHG2.csv")
+
+
+
+
+
+
 
         insize=0
 
         for x in slicedDF.head().iterrows():
 
             row=x[1]
-
+            print(str(row['time']) + str(row['ref']))
+            print(outputColumn)
+            print(row[outputColumn])
+            print(tmpFI)
+            print(tmpBI)
+            print(tmpLag)
+            print(tmpLead)
+            print(tmpConstruct)
+            print("/\/\/\/\/\/\/\/\/")
             # Forward imputation from previous period return.
             if row[periodColumn] == dfrow[periodColumn] and row[forwardImpLink] > 0 and row[lagTarget] > 0 and row[timeDiffLag] == 1:
                 tmpFI = row[forwardImpLink]
                 tmpLag = row[lagTarget]
+                print("went to -1")
                 break
                 # In scala, end loop here.
             insize+=1
             # Define the link fraction for imputation start.
+            print("|||||||||||||||||||||||||")
+            print(row[periodColumn])
+            print(dfrow[periodColumn])
+            print("|||||||||||||||||||||||||")
             if row[forwardImpLink] > 0 and row[timeDiffLag] ==1 and row[periodColumn] <= dfrow[periodColumn]:
+                print("went to 0")
                 if row[lagTarget] > 0:
                     tmpFI = row[forwardImpLink]
                 else:
                     # Check this works, we think this is like += . if there is an error around here, this might be why.
                     tmpFI *= row[forwardImpLink]
 
+
             if row[backwardImpLink] > 0 and row[timeDiffLead] == 1 and tmpLead == 0 and (row[lagTarget] == 0 or row[lagTarget] == None) and row[periodColumn] >= dfrow[periodColumn]:
                tmpBI *= row[backwardImpLink]
             # Define the link fraction for imputation(forward&backward) end.
             # Select a linked response to apply the link fraction start.
             if row[lagTarget] > 0 and row[timeDiffLag] == 1 and (row[periodColumn] <= dfrow[periodColumn]):
+                print("Went to 1")
                 tmpLag = row[lagTarget]
             elif row[leadTarget]>0 and row[timeDiffLead] ==1 and tmpLead == 0 and (row[lagTarget] == 0 or row[lagTarget] == None) and row[periodColumn] >= dfrow[periodColumn]:
+                print("Went to 2")
                 tmpLead=row[leadTarget]
-            elif row[outputColumn] > 0:
-                tmpConstruct = row[outputColumn]
+            elif row[outputColumn] > 0 or not math.isnan(row[outputColumn]):
+                print("Went to 3")
 
+                tmpConstruct = row[outputColumn]
+                print(tmpConstruct)
+            print("---------------------------------------")
+        print("----------------------")
         # Select a linked response to apply the link fraction end.
         out=dfrow[outputColumn]
         marker=dfrow[markerColumn]
@@ -260,8 +327,7 @@ class Imputation(baseMethod):
         :param otherPeriod: String - previous or next period (yyyymm)
         :return: :Int - The number of months between the two given periods.
         """
-        print(period)
-        print(otherPeriod)
+
         #pass periodicity- if not annual or monthly -> instead of current behaviour-check if abs diff is 1 ->we know that it is the next quarter
 
 
@@ -274,8 +340,7 @@ class Imputation(baseMethod):
                 month = quarter * 3
                 return abs(year + month)
             otherPeriod = int(otherPeriod)
-            print(otherPeriod)
-            print(period)
+
             #annual periods are 4 digits, this causes a fail here.
             if(len(str(otherPeriod))==4):
                 return abs((int(period) - int(otherPeriod))*12)
@@ -333,8 +398,11 @@ class Imputation(baseMethod):
 
             elif periodicity == "02":
 
-                nextPeriod = int(currentPeriod) + 1
-                lastPeriod = int(currentPeriod) - 1
+                nextPeriod = str(int(currentPeriod) + 1)
+                lastPeriod = str(int(currentPeriod) - 1)
+                print(lastPeriod)
+                print(nextPeriod)
+                print("*************************************")
 
             else:#quarterly
                 currentMonth = str(currentPeriod)[5:]
@@ -395,7 +463,7 @@ class Imputation(baseMethod):
 
     def identifyInterval(self, dataframe, periodColumn, groupByColumns, periodicity, timeDiffLag, timeDiffLead, normalisedPeriod):
         tempdf = dataframe
-        print(tempdf)
+
 
         lagMonDiffQ = "lagMonDiffQ"
         leadMonDiffQ = "leadMonDiffQ"
@@ -403,7 +471,7 @@ class Imputation(baseMethod):
         leadMonDiffA = "leadMonDiffA"
 
         periodicity = periodicity.lower()
-        print(periodColumn)
+
         if periodicity == '01':
             tempdf[normalisedPeriod] = tempdf.apply(lambda x:str(x[periodColumn]), axis=1)
             tempdf = self.monthsBetween(tempdf, normalisedPeriod, groupByColumns, timeDiffLag, timeDiffLead, periodicity)
@@ -416,7 +484,7 @@ class Imputation(baseMethod):
             tempdf[timeDiffLag] = tempdf.apply(lambda x: 1 if x[lagMonDiffA] == 12 else 0, axis=1)
             tempdf[timeDiffLead] = tempdf.apply(lambda x: 1 if x[leadMonDiffA] == 12 else 0, axis=1)
             tempdf.to_csv("Mon.csv")
-            tempdf.drop([lagMonDiffA,leadMonDiffA,"previousPeriod","nextPeriod"], inplace=True, axis=1)
+            tempdf.drop([lagMonDiffA,leadMonDiffA], inplace=True, axis=1)
 
         elif periodicity == '03' or periodicity == "quarterly":
 
@@ -449,7 +517,7 @@ class Imputation(baseMethod):
             tempdf[timeDiffLead] = tempdf.apply(lambda x: 1 if (x["nextPeriod"]!= None and int(x["nextPeriod"][5:]) - int(x[normalisedPeriod][5:]) == -3 and x[leadMonDiffQ] <= 5) else (int(x["nextPeriod"][5:]) - int(x[normalisedPeriod][5:])) if x["nextPeriod"]!= None else 0, axis=1)
 
             #tempdf[timeDiffLead] = tempdf.apply(lambda x: 1 if (calcQuarter(x["nextPeriod"]) - calcQuarter(x[periodColumn]) == -3 and x[leadMonDiffQ] <= 5) else (calcQuarter(x["nextPeriod"]) - calcQuarter(x[periodColumn])), axis=1)
-            tempdf = tempdf.drop([lagMonDiffQ,leadMonDiffQ,"previousPeriod","nextPeriod"], axis=1)
+            tempdf = tempdf.drop([lagMonDiffQ,leadMonDiffQ], axis=1)
 
         return tempdf
 
@@ -475,23 +543,30 @@ class Imputation(baseMethod):
         #dont calculate, keep.
         def adjacentTargetLambda(row, dataframe,laglead):
             out = np.float("nan")
-            #print(row[laglead])
-            if(row[laglead]!=None):
+            print(row[laglead])
+            if(row[laglead]!=None and str(row[laglead])!='nan'):
+                if("." in str(row[laglead])):
+                    print("GUFFAW")
+                    print(row[laglead][:5])
+
+                print("-------")
+                print(int(row[laglead]))
                 sliceOfDataFrame = dataframe[(dataframe[self.normalisedPeriod]==row[laglead])& (dataframe[self.uniqueIdentifier]==row[self.uniqueIdentifier])]
+                sliceOfDataFrame.to_csv("ShouldHaveStuff.csv")
                 # & (dataframe[self.uniqueIdentifier]==row[self.uniqueIdentifier]) & (dataframe[groupByColumns] == row[groupByColumns])
                 if(sliceOfDataFrame.size>0):
                     out= sliceOfDataFrame[self.targetColumn].tolist()[0]
-            print(out)
-            print(type(out))
+
             return out
 
         #lambda: func(row,dataframe)
         #row['lagtarget'] = dataframe[[normalisedP == rowLastp, ref=ref,groupbys=groupbys]][targetColumn]
         #dataframe[lagTarget] = dataframe.groupby(groupByColumns)[targetColumn].shift(count).fillna(0).astype(np.int64) # backwards
-
+        dataframe.to_csv("WTF.csv")
         dataframe[lagTarget] = dataframe.apply(lambda x: adjacentTargetLambda(x,dataframe,'previousPeriod'),axis=1)
+        dataframe[leadTarget] = dataframe.apply(lambda x: adjacentTargetLambda(x, dataframe, 'nextPeriod'), axis=1)
 
-        dataframe[leadTarget] = dataframe.groupby(groupByColumns)[targetColumn].shift(-count).fillna(0).astype(np.int64) # forwards
+        #dataframe[leadTarget] = dataframe.groupby(groupByColumns)[targetColumn].shift(-count).fillna(0).astype(np.int64) # forwards
         dataframe.to_csv("adjacentTarget.csv")
         return dataframe
 
@@ -505,7 +580,7 @@ class Imputation(baseMethod):
         interimDF = dataframe[dataframe[normalisedPeriod]=="Blank"]
         interimDF[newLinkColumn] = interimDF[normalisedPeriod]
         dataframe.to_csv("Inter.csv")
-        print(periodList)
+
         for period in periodList:
             filtereddataframe = dataframe[(dataframe[intervalCol] == inclusionValue) & (dataframe[targetColumn].notnull()) & (dataframe[adjacentTargetColumn].notnull()) & (dataframe[normalisedPeriod] == str(period))]
             filtereddataframe.to_csv(str(period) + "Inter.csv")
