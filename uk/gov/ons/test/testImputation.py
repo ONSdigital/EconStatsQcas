@@ -5,13 +5,6 @@ from pandas.util.testing import assert_frame_equal
 imputation=imputation.Imputation(pd.DataFrame(),['classification','cell_no','question'],'period','responder_id','adjusted_value','adjusted_values','MarkerCol','selection_data','q','imp_factor')
 
 
-def test_NullParams():
-    #Test that null values cause exception
-
-    with pytest.raises(Exception):
-        bob = None
-        boris = imputation.imputation(bob)
-
 def test_Months_Between():
     #Test that given 2 periods, function will return number of months between
     assert(imputation.months_between(201712,201812) == 12)
@@ -154,7 +147,7 @@ def test_doConstruction():
 #1 crossing year boundary, one doesnt cross year boundary, one has months far apart
 #test same month(should get 0's)
 #test_doConstruction()
-test_NullParams()
+
 test_identifyInterval()
 test_identifyAdjacentTarget()
 test_Months_Between()

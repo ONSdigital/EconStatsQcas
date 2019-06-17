@@ -1,27 +1,9 @@
-from uk.gov.ons.src.baseMethod import baseMethod
+#from uk.gov.ons.src.baseMethod import baseMethod
 import pandas as pd
 import numpy as np
 import math
 
-# input_data = pd.read_csv("C:\\Users\\Off.Network.User4\\Desktop\data\\testData.csv")
-#input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_bi_bi_r.json""")
-
-
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_bi_bi_r_fi_fi_r.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_fi_fi_Quarterly.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_fi_fi_Annually.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_bi_r_fi_r_fi.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_c_fi.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_c_fi_fi.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_c_fi_NotSelected_r.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_NotSelected_c.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_construct.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_e.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_fi.json""")
-# input_data = pd.read_json("""C:\\Users\\Off.Network.User4\\Desktop\\dtradestest\\dtrades test data\\dtrades test data\\in\\Imputation_r_r_r.json""")
-
-
-class Imputation(baseMethod):
+class Imputation():
     """
     Description: Imputation Class controls the imputation of data.
     Extends baseMethod.
@@ -88,10 +70,6 @@ class Imputation(baseMethod):
         :param imp_factor_column:String  - The name of the column that indicates whether a hardcoded factor is to be used.(If this column has a value use that, else impute as per dtrades)
 
         """
-
-        # Data removed from super init because cannot compare with == None.
-        super().__init__(imputation_class, period_column, unique_identifier, target_column, output_column, marker_column, auxiliary_column, periodicity)
-
         # Passed In.
         self.data = data
         self.imputation_class = imputation_class
