@@ -3,12 +3,12 @@
 This is the d-trades-esque imputation module. Based heavily on dtrades generic imputation code, but altered to also work for qcas.
 
 Data Requirements:
-At a minimum this process needs:
-target column: The column that should hold a returned value(the one that'll be imputed)
-period column: A column that gives an indication of period within the data
-groupby_columns: Column(s) that represent the way that the data is grouped(strata etc)
-unique identifier column: A column that holds a unique id for a reference(responder_id, etc)
-auxiliary data column: A column that holds aux data, that is data to be used in construction when there is no previous data to impute from.
+At a minimum this process needs:<br>
+target column: The column that should hold a returned value(the one that'll be imputed)<br>
+period column: A column that gives an indication of period within the data<br>
+groupby_columns: Column(s) that represent the way that the data is grouped(strata etc)<br>
+unique identifier column: A column that holds a unique id for a reference(responder_id, etc)<br>
+auxiliary data column: A column that holds aux data, that is data to be used in construction when there is no previous data to impute from.<br><br>
 
 Data Outputs:
 This system will output the original dataset with the addition of 2 columns
