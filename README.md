@@ -11,14 +11,14 @@ unique identifier column: A column that holds a unique id for a reference(respon
 auxiliary data column: A column that holds aux data, that is data to be used in construction when there is no previous data to impute from.<br><br>
 
 Data Outputs:
-This system will output the original dataset with the addition of 2 columns
-output column - The column that should hold the output to imputation(can be separate to target column, or the same column)
-marker column - The column that will contain the imputation marker representing how it was imputed.
-                                                                                             (FI - Forward Imputed,
-                                                                                              BI - Backward Imputed,
-                                                                                               R - Returned,
-                                                                                               C - Constructed,
-                                                                                               E - Error)
+This system will output the original dataset with the addition of 2 columns:<br>
+output column - The column that should hold the output to imputation(can be separate to target column, or the same column)<br>
+marker column - The column that will contain the imputation marker representing how it was imputed.<br>
+                                                                                             (FI - Forward Imputed,<br>
+                                                                                              BI - Backward Imputed,<br>
+                                                                                               R - Returned,<br>
+                                                                                               C - Constructed,<br>
+                                                                                               E - Error)<br><br>
 
 
 
