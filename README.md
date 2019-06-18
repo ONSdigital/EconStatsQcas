@@ -4,7 +4,7 @@ This is the d-trades-esque imputation module. Based heavily on dtrades generic i
 
 Data Requirements:
 At a minimum this process needs:<br>
-target column: The column that should hold a returned value(the one that'll be imputed)<br>
+*target column*: The column that should hold a returned value(the one that'll be imputed)<br>
 period column: A column that gives an indication of period within the data<br>
 groupby_columns: Column(s) that represent the way that the data is grouped(strata etc)<br>
 unique identifier column: A column that holds a unique id for a reference(responder_id, etc)<br>
